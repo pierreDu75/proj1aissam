@@ -1,0 +1,36 @@
+piVersion: apps/v1
+kind: Deployment
+metadata:
+  name: monpods-deployment
+  labels:
+    app: monpods
+spec:
+  replicas: 2  # Nombre de réplicas du pod (ajustez selon les besoins)
+  selector:
+    matchLabels:
+      app: monpods
+  template:
+    metadata:
+      labels:
+        app: monpods
+    spec:
+      volumes:
+        - name: monstorage
+          persistentVolumeClaim:
+            claimName: monpvc
+      containers:
+        - name: monnginx
+          image: nginx
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              cpu: 500m
+              memory: 1Gi
+            requests:
+              cpu: 250m
+              memory: 500Mi
+          volumeMounts:
+            - mountPath: "/usr/share/nginx/html"
+              name: monstorage
+
